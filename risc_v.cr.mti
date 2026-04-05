@@ -1,0 +1,22 @@
+D:/NLS_Intern/risc_v/brc.v {1 {vlog -work work {D:\NLS_Intern\risc_v\brc.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module brc
+
+Top level modules:
+	brc
+
+} {} {}} D:/NLS_Intern/risc_v/tb.v {1 {vlog -work work {D:\NLS_Intern\risc_v\tb.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module tb
+
+Top level modules:
+	tb
+
+} {} {}} D:/NLS_Intern/risc_v/alu.v {1 {vlog -work work {D:\NLS_Intern\risc_v\alu.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module alu
+
+Top level modules:
+	alu
+
+} {} {}}
