@@ -5,12 +5,19 @@ Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
 Top level modules:
 	brc
 
-} {} {}} D:/NLS_Intern/risc_v/tb.v {1 {vlog -work work {D:\NLS_Intern\risc_v\tb.v}
+} {} {}} D:/NLS_Intern/risc_v/memory.v {1 {vlog -work work D:/NLS_Intern/risc_v/memory.v
 Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
--- Compiling module tb
+-- Compiling module memory
 
 Top level modules:
-	tb
+	memory
+
+} {} {}} D:/NLS_Intern/risc_v/regfile.v {1 {vlog -work work D:/NLS_Intern/risc_v/regfile.v
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module regfile
+
+Top level modules:
+	regfile
 
 } {} {}} D:/NLS_Intern/risc_v/alu.v {1 {vlog -work work {D:\NLS_Intern\risc_v\alu.v}
 Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
@@ -18,5 +25,12 @@ Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
 
 Top level modules:
 	alu
+
+} {} {}} D:/NLS_Intern/risc_v/tb.v {1 {vlog -work work {D:\NLS_Intern\risc_v\tb.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module tb
+
+Top level modules:
+	tb
 
 } {} {}}
