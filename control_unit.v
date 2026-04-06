@@ -19,7 +19,7 @@ wire [6:0] funct7 = instr[31:25];
 always @(*) begin
     pc_sel = 1'b0;
     rd_wren = 1'b0;
-    insn_vld = 1'b0;
+    insn_vld = 1'b1;
     br_un = 1'b0;
     opa_sel = 1'b0;
     opb_sel = 1'b0;
@@ -38,14 +38,14 @@ always @(*) begin
             case ({funct7, funct3})
                 10'b0000000_000: alu_op = 4'b0000; //add
                 10'b0100000_000: alu_op = 4'b0001; //sub
-                10'b0000000_010: alu_op = 4'b0010; //sll
-                10'b0000000_011: alu_op = 4'b0011; //slt
-                10'b0000000_100: alu_op = 4'b0100; //sltu
-                10'b0000000_110: alu_op = 4'b0101; //xor
-                10'b0000000_111: alu_op = 4'b0110; //srl
-                10'b0000000_001: alu_op = 4'b0111; //sra
-                10'b0000000_101: alu_op = 4'b1000; //or
-                10'b0100000_101: alu_op = 4'b1001; //and
+                10'b0000000_001: alu_op = 4'b0010; //sll
+                10'b0000000_010: alu_op = 4'b0011; //slt
+                10'b0000000_011: alu_op = 4'b0100; //sltu
+                10'b0000000_100: alu_op = 4'b0101; //xor
+                10'b0000000_101: alu_op = 4'b0110; //srl
+                10'b0100000_101: alu_op = 4'b0111; //sra
+                10'b0000000_110: alu_op = 4'b1000; //or
+                10'b0000000_111: alu_op = 4'b1001; //and
             endcase
         end
 ///////////////////////////////I-type//////////////////////////////
@@ -57,20 +57,20 @@ always @(*) begin
 
             case(funct3)
                 3'b000: alu_op = 4'b0000; //addi
-                3'b010: alu_op = 4'b0010; //slti
-                3'b011: alu_op = 4'b0011; //sltiu
-                3'b100: alu_op = 4'b0100; //xori
-                3'b110: alu_op = 4'b0110; //ori
-                3'b111: alu_op = 4'b0111; //andi
+                3'b010: alu_op = 4'b0011; //slti
+                3'b011: alu_op = 4'b0100; //sltiu
+                3'b100: alu_op = 4'b0101; //xori
+                3'b110: alu_op = 4'b1000; //ori
+                3'b111: alu_op = 4'b1001; //andi
                 3'b001: begin
                     if(funct7 == 7'b0000000)
-                        alu_op = 4'b0111; //slli
+                        alu_op = 4'b0010; //slli
                 end
                 3'b101: begin
                     if(funct7 == 7'b0000000)
-                        alu_op = 4'b1000; //srli
+                        alu_op = 4'b0110; //srli
                     else if(funct7 == 7'b0100000)
-                        alu_op = 4'b1001; //srai
+                        alu_op = 4'b0111; //srai
                 end
             endcase
         end
@@ -98,14 +98,20 @@ always @(*) begin
                 3'b001: pc_sel = ~br_equal; //bne
                 3'b100: begin
                     pc_sel = br_less; //blt
-                    br_un = 1'b1;
+                    br_un = 1'b0;
                 end
                 3'b101: begin
                     pc_sel = ~br_less; //bge
+                    br_un = 1'b0;
+                end
+                3'b110: begin 
+                    pc_sel = br_less; //bltu
                     br_un = 1'b1;
                 end
-                3'b110: pc_sel = br_less; //bltu
-                3'b111: pc_sel = ~br_less; //bgeu
+                3'b111: begin 
+                    pc_sel = ~br_less; //bgeu
+                    br_un = 1'b1;
+                end
             endcase
         end
 ////////////////////////////////jal///////////////////////////////////////////
@@ -127,6 +133,7 @@ always @(*) begin
 ///////////////////////////////lui/////////////////////////////////////////
         7'b0110111: begin
             rd_wren = 1'b1;
+            opa_sel = 1'b0;
             opb_sel = 1'b1;
             wb_sel = 2'b01;
         end
