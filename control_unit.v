@@ -32,7 +32,7 @@ always @(*) begin
         7'b0110011: begin
             rd_wren = 1'b1;
             opa_sel = 1'b1;
-            opa_sel = 1'b0;
+            opb_sel = 1'b0;
             wb_sel = 2'b01;
 
             case ({funct7, funct3})
@@ -63,7 +63,7 @@ always @(*) begin
                 3'b110: alu_op = 4'b0110; //ori
                 3'b111: alu_op = 4'b0111; //andi
                 3'b001: begin
-                    if(funct7 == 0000000)
+                    if(funct7 == 7'b0000000)
                         alu_op = 4'b0111; //slli
                 end
                 3'b101: begin
