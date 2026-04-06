@@ -31,7 +31,7 @@ always @(*) begin
 ///////////////////////////////R-type///////////////////////////
         7'b0110011: begin
             rd_wren = 1'b1;
-            opa_sel = 1'b1;
+            opa_sel = 1'b0;
             opb_sel = 1'b0;
             wb_sel = 2'b01;
 
@@ -51,7 +51,7 @@ always @(*) begin
 ///////////////////////////////I-type//////////////////////////////
         7'b0010011: begin
             rd_wren = 1'b1;
-            opa_sel = 1'b1;
+            opa_sel = 1'b0;
             opb_sel = 1'b1;
             wb_sel = 2'b01;
 
@@ -77,7 +77,7 @@ always @(*) begin
 ////////////////////////////////Load///////////////////////////////////
         7'b0000011: begin
             rd_wren = 1'b1;
-            opa_sel = 1'b1;
+            opa_sel = 1'b0;
             opb_sel = 1'b1;
             alu_op = 4'b0000;
             wb_sel = 2'b10;
@@ -85,7 +85,7 @@ always @(*) begin
 //////////////////////////////store////////////////////////////////////
         7'b0100011: begin
             mem_wren = 1'b1;
-            opa_sel = 1'b1;
+            opa_sel = 1'b0;
             opb_sel = 1'b1;
             alu_op = 4'b0000;
         end
@@ -112,14 +112,14 @@ always @(*) begin
         7'b1101111: begin
             rd_wren = 1'b1;
             pc_sel = 1'b1;
-            opa_sel = 1'b0;
+            opa_sel = 1'b1;
             opb_sel = 1'b1;
             wb_sel = 2'b00;
         end
 ///////////////////////////////jalr/////////////////////////////////////////
         7'b1100111: begin
             rd_wren = 1'b1;
-            opa_sel = 1'b1;
+            opa_sel = 1'b0;
             opb_sel = 1'b1;
             wb_sel = 2'b00;
             pc_sel = 1'b1;
@@ -133,7 +133,7 @@ always @(*) begin
 //////////////////////////////auipc/////////////////////////////////////
         7'b0010111: begin
             rd_wren = 1'b1;
-            opa_sel = 1'b0;
+            opa_sel = 1'b1;
             opb_sel = 1'b1;
             wb_sel = 2'b01;
         end
