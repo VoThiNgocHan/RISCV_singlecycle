@@ -6,14 +6,14 @@ module alu(
 );
 parameter add = 4'b0000,
           sub = 4'b0001,
-          slt = 4'b0010,
-          sltu = 4'b0011,
-          xxor = 4'b0100,
-          oor = 4'b0101,
-          aand = 4'b0110,
-          sll = 4'b0111,
-          srl = 4'b1000,
-          sra = 4'b1001;
+          sll = 4'b0010,
+          slt = 4'b0011,
+          sltu = 4'b0100,
+          xxor = 4'b0101,
+          srl = 4'b0110,
+          sra = 4'b0111,
+          oor = 4'b1000,
+          aand = 4'b1001;
 
 wire [31:0] bsub = ~i_op_b + 1;
 wire [31:0] diff = i_op_a + bsub;
