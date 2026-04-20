@@ -16,7 +16,6 @@ module singlecycle(
   wire [4:0]  rs1_addr, rs2_addr, rd_addr;
 
   wire [31:0] alu_operand_a, alu_operand_b, alu_data;
-  wire [31:0] imm_value;
 
   wire        pc_sel, rd_wren, insn_vld, br_un;
   wire        opa_sel, opb_sel;
@@ -31,6 +30,9 @@ module singlecycle(
   wire [2:0]  lsu_control;
 
   wire is_load;
+
+  wire [31:0] imm_value;   
+  wire [2:0]  ImmSrc;    
 
   // ==================== PC ====================
 
@@ -87,7 +89,8 @@ module singlecycle(
       .o_opb_sel(opb_sel),
       .o_alu_op(alu_op),
       .o_wb_sel(wb_sel),
-      .o_is_jalr(is_jalr)
+      .o_is_jalr(is_jalr),
+      .o_ImmSrc(ImmSrc)
   );
 
   assign is_load = (instr[6:2] == 5'b00000);
@@ -120,12 +123,13 @@ module singlecycle(
       .o_br_equal(br_equal)
   );
 
-  // ==================== Immediate ====================
+  // ==================== Immediate ====================    
 
-  ImmGen imm_gen (
-      .instr(instr),
-      .o_immgen(imm_value)
-  );
+    Extend imm_gen (
+        .instruction(instr[31:7]),
+        .ImmSrc(ImmSrc),
+        .ImmExt(imm_value)
+    );
 
   // ==================== ALU ====================
 

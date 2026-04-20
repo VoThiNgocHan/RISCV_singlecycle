@@ -10,11 +10,19 @@ module control_unit (
     output reg opa_sel, opb_sel,
     output reg [3:0] alu_op, 
     output reg mem_wren,
-    output reg [1:0] wb_sel
+    output reg [1:0] wb_sel,
+    output reg [2:0] ImmSrc
 );
-wire [6:0] opcode = instr[6:0];
-wire [2:0] funct3 = instr[14:12];
-wire [6:0] funct7 = instr[31:25];
+
+
+wire [6:0] opcode;
+assign opcode = instr[6:0];
+
+wire [2:0] funct3;
+assign funct3 = instr[14:12];
+
+wire [6:0] funct7;
+assign funct7 = instr[31:25];
 
 always @(*) begin
     pc_sel = 1'b0;
@@ -26,6 +34,26 @@ always @(*) begin
     alu_op = 4'b0;
     mem_wren = 1'b0;
     wb_sel = 2'b01;
+    ImmSrc = 3'b000; // default
+
+    case (opcode)
+
+        7'b0010011, 7'b0000011, 7'b1100111:
+            ImmSrc = 3'b000;
+
+        7'b0100011:
+            ImmSrc = 3'b001;
+
+        7'b1100011:
+            ImmSrc = 3'b010;
+
+        7'b0110111, 7'b0010111:
+            ImmSrc = 3'b011;
+
+        7'b1101111:
+            ImmSrc = 3'b100;
+
+    endcase
 
     case (opcode)
 ///////////////////////////////R-type///////////////////////////
@@ -46,6 +74,7 @@ always @(*) begin
                 10'b0100000_101: alu_op = 4'b0111; //sra
                 10'b0000000_110: alu_op = 4'b1000; //or
                 10'b0000000_111: alu_op = 4'b1001; //and
+                default: alu_op = 4'b0000;
             endcase
         end
 ///////////////////////////////I-type//////////////////////////////
@@ -72,6 +101,7 @@ always @(*) begin
                     else if(funct7 == 7'b0100000)
                         alu_op = 4'b0111; //srai
                 end
+                default: alu_op = 4'b0000;
             endcase
         end
 ////////////////////////////////Load///////////////////////////////////
@@ -92,7 +122,7 @@ always @(*) begin
 ////////////////////////////branch////////////////////////////////////
         7'b1100011: begin
             opa_sel = 1'b0;
-            opb_sel = 1'b1;
+            opb_sel = 1'b0;
             case(funct3)
                 3'b000: pc_sel = br_equal; //beq
                 3'b001: pc_sel = ~br_equal; //bne

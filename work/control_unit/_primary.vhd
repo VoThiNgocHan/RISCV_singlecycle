@@ -13,6 +13,7 @@ entity control_unit is
         opb_sel         : out    vl_logic;
         alu_op          : out    vl_logic_vector(3 downto 0);
         mem_wren        : out    vl_logic;
-        wb_sel          : out    vl_logic_vector(1 downto 0)
+        wb_sel          : out    vl_logic_vector(1 downto 0);
+        ImmSrc          : out    vl_logic_vector(2 downto 0)
     );
 end control_unit;
