@@ -1,47 +1,36 @@
 module singlecycle(
-    input          i_clk, i_reset,
-    input  [31:0]  i_io_sw,
-    output         o_insn_vld,
-    output reg [31:0] o_pc_debug,
-    output [31:0] o_io_ledr, o_io_ledg, o_io_lcd,
+    input        i_clk, i_reset,
+    input  [31:0] i_io_sw,
+    output       o_insn_vld,
+    output [31:0] o_pc_debug, o_io_ledr, o_io_ledg, o_io_lcd,
     output [6:0]  o_io_hex0, o_io_hex1, o_io_hex2, o_io_hex3,
-              o_io_hex4, o_io_hex5, o_io_hex6, o_io_hex7
+                  o_io_hex4, o_io_hex5, o_io_hex6, o_io_hex7
 );
 
   // ==================== Signals ====================
 
-  // PC
   wire [31:0] pc, pc_next, pc_plus4;
-
-  // Instruction
   wire [31:0] instr;
 
-  // Register File
   wire [31:0] rs1_data, rs2_data, wb_data;
   wire [4:0]  rs1_addr, rs2_addr, rd_addr;
 
-  // ALU
-  wire [1:0] ALUop;
-  wire [3:0] ALU_control;
-
-
-  // Immediate
+  wire [31:0] alu_operand_a, alu_operand_b, alu_data;
   wire [31:0] imm_value;
 
-  // Control
   wire        pc_sel, rd_wren, insn_vld, br_un;
   wire        opa_sel, opb_sel;
   wire [3:0]  alu_op;
   wire [1:0]  wb_sel;
-  wire        wr_en;
+  wire        wr_en, rd_en;
   wire        is_jalr;
 
-  // Branch
-  wire br_less, br_equal;
+  wire        br_less, br_equal;
 
-  // LSU
   wire [31:0] ld_data;
   wire [2:0]  lsu_control;
+
+  wire is_load;
 
   // ==================== PC ====================
 
@@ -62,50 +51,46 @@ module singlecycle(
   wire [31:0] alu_data_jalr;
   assign alu_data_jalr = is_jalr ? {alu_data[31:1], 1'b0} : alu_data;
 
-  wire [31:0] branch_target = pc + imm_value;
-  wire [31:0] pc_target     = is_jalr ? alu_data_jalr : branch_target;
+  wire [31:0] branch_target;
+  assign branch_target = pc + imm_value;
 
-  pc_mux PC_select (
-      .alu_data(pc_target),
-      .pc_four(pc_plus4),
-      .pc_sel(pc_sel),
-      .pc_next(pc_next)
+  wire [31:0] pc_target;
+  assign pc_target = is_jalr ? alu_data_jalr : branch_target;
+
+  mux_2in1 PC_select (
+      .i_sel(pc_sel),
+      .i_in0(pc_plus4),
+      .i_in1(pc_target),
+      .o_out(pc_next)
   );
 
   // ==================== Instruction Memory ====================
-/*  instr_mem mem (
-      .i_clk(i_clk),
-      .i_rst(i_reset),
-      .i_wren(1'b0),
-      .i_bmask(4'b0000),
-      .i_addr(pc),
-      .i_wdata(32'b0),
-      .o_rdata(instr)
+
+  instr_mem imem (
+      .i_pc_addr(pc),
+      .o_instr(instr)
   );
-  */
-    instr_mem imem (
-              .i_pc_addr(pc),
-              .o_instr(instr)
-            );
 
   // ==================== Control ====================
 
   control_unit ctrl (
-      .instr(instr),
-      .br_less(br_less),
-      .br_equal(br_equal),
-      .pc_sel(pc_sel),
-      .rd_wren(rd_wren),
-      .insn_vld(insn_vld),
-      .br_un(br_un),
-      .opa_sel(opa_sel),
-      .opb_sel(opb_sel),
-      .alu_op(alu_op),
-      .mem_wren(wr_en),
-      .wb_sel(wb_sel)
+      .i_inst(instr),
+      .i_br_less(br_less),
+      .i_br_equal(br_equal),
+      .o_pc_sel(pc_sel),
+      .o_rd_wren(rd_wren),
+      .o_mem_wren(wr_en),
+      .o_mem_rden(rd_en),
+      .o_insn_vld(insn_vld),
+      .o_br_un(br_un),
+      .o_opa_sel(opa_sel),
+      .o_opb_sel(opb_sel),
+      .o_alu_op(alu_op),
+      .o_wb_sel(wb_sel),
+      .o_is_jalr(is_jalr)
   );
 
-  assign is_jalr = 1'b0; 
+  assign is_load = (instr[6:2] == 5'b00000);
 
   // ==================== Register File ====================
 
@@ -115,12 +100,12 @@ module singlecycle(
 
   regfile reg_file (
       .i_clk(i_clk),
-      .i_rst(i_reset),
-      .i_rd_wren(rd_wren),
+      .i_reset(i_reset),
       .i_rs1_addr(rs1_addr),
       .i_rs2_addr(rs2_addr),
       .i_rd_addr(rd_addr),
       .i_rd_data(wb_data),
+      .i_rd_wren(rd_wren),
       .o_rs1_data(rs1_data),
       .o_rs2_data(rs2_data)
   );
@@ -144,18 +129,18 @@ module singlecycle(
 
   // ==================== ALU ====================
 
-  opa_mux OPA_sel (
-      .pc(pc),
-      .rs1_data(rs1_data),
-      .opa_sel(opa_sel),
-      .operand_a(alu_operand_a)
+  mux_2in1 OPA_sel (
+      .i_sel(opa_sel),
+      .i_in0(rs1_data),
+      .i_in1(pc),
+      .o_out(alu_operand_a)
   );
 
-  opb_mux OPB_sel (
-      .rs2_data(rs2_data),
-      .imm(imm_value),
-      .opb_sel(opb_sel),
-      .operand_b(alu_operand_b)
+  mux_2in1 OPB_sel (
+      .i_sel(opb_sel),
+      .i_in0(rs2_data),
+      .i_in1(imm_value),
+      .o_out(alu_operand_b)
   );
 
   alu alu (
@@ -167,68 +152,60 @@ module singlecycle(
 
   // ==================== LSU ====================
 
-    wire [31:0] ledr_wire, ledg_wire, lcd_wire;
-    wire [6:0] hex0_wire, hex1_wire, hex2_wire, hex3_wire;
-    wire [6:0] hex4_wire, hex5_wire, hex6_wire, hex7_wire;
+  assign lsu_control = instr[14:12];
 
-    lsu lsu_unit (
-        .i_clk(i_clk),
-        .i_reset(i_reset),
-        .i_lsu_addr(alu_data),
-        .i_st_data(rs2_data),
-        .i_lsu_wren(wr_en),
-        .i_io_sw(i_io_sw),
-        .i_control(lsu_control),
-
-        .o_ld_data(ld_data),
-
-        .o_io_ledr(ledr_wire),
-        .o_io_ledg(ledg_wire),
-
-        .o_io_hex0(hex0_wire),
-        .o_io_hex1(hex1_wire),
-        .o_io_hex2(hex2_wire),
-        .o_io_hex3(hex3_wire),
-        .o_io_hex4(hex4_wire),
-        .o_io_hex5(hex5_wire),
-        .o_io_hex6(hex6_wire),
-        .o_io_hex7(hex7_wire),
-
-        .o_io_lcd(lcd_wire)
-    );
-
-    assign o_io_ledr = ledr_wire;
-    assign o_io_ledg = ledg_wire;
-    assign o_io_lcd  = lcd_wire;
-
-    assign o_io_hex0 = hex0_wire;
-    assign o_io_hex1 = hex1_wire;
-    assign o_io_hex2 = hex2_wire;
-    assign o_io_hex3 = hex3_wire;
-    assign o_io_hex4 = hex4_wire;
-    assign o_io_hex5 = hex5_wire;
-    assign o_io_hex6 = hex6_wire;
-    assign o_io_hex7 = hex7_wire;
-
-  // ==================== Writeback ====================
-
-  wb_mux WB_sel (
-      .pc_four(pc_plus4),
-      .alu_data(alu_data),
-      .ld_data(ld_data),
-      .wb_sel(wb_sel),
-      .wb_data(wb_data)
+  lsu lsu_unit (
+      .i_clk(i_clk),
+      .i_reset(i_reset),
+      .i_lsu_addr(alu_data),
+      .i_st_data(rs2_data),
+      .i_lsu_wren(wr_en),
+      .i_io_sw(i_io_sw),
+      .i_control(lsu_control),
+      .o_ld_data(ld_data),
+      .o_io_ledr(o_io_ledr),
+      .o_io_ledg(o_io_ledg),
+      .o_io_hex0(o_io_hex0),
+      .o_io_hex1(o_io_hex1),
+      .o_io_hex2(o_io_hex2),
+      .o_io_hex3(o_io_hex3),
+      .o_io_hex4(o_io_hex4),
+      .o_io_hex5(o_io_hex5),
+      .o_io_hex6(o_io_hex6),
+      .o_io_hex7(o_io_hex7),
+      .o_io_lcd(o_io_lcd)
   );
 
-  // ==================== Output ====================
+  // ==================== WRITEBACK ====================
+
+  wire [31:0] wb_mid;
+
+  mux_2in1 WB_mux1 (
+      .i_sel(wb_sel[0]),
+      .i_in0(alu_data),
+      .i_in1(ld_data),
+      .o_out(wb_mid)
+  );
+
+  mux_2in1 WB_mux2 (
+      .i_sel(wb_sel[1]),
+      .i_in0(wb_mid),
+      .i_in1(pc_plus4),
+      .o_out(wb_data)
+  );
+
+  // ==================== OUTPUT ====================
+
+  reg [31:0] pc_debug_reg;
 
   always @(posedge i_clk) begin
       if (~i_reset)
-          o_pc_debug <= 32'h0;
+          pc_debug_reg <= 32'h0;
       else
-          o_pc_debug <= pc;
+          pc_debug_reg <= pc;
   end
 
+  assign o_pc_debug = pc_debug_reg;
   assign o_insn_vld = insn_vld;
 
 endmodule

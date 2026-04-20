@@ -171,11 +171,11 @@ r1
 31
 Z84 !s90 -reportprogress|300|-work|work|D:\NLS_Intern\risc_v\instr_mem.v|
 R8
-!i10b 1
 Z85 !s100 `N]i:=3a2W7elSeXN?m:F3
-!s85 0
 Z86 !s108 1776674574.912000
 Z87 !s107 D:\NLS_Intern\risc_v\instr_mem.v|
+!i10b 1
+!s85 0
 !s101 -O0
 vlsu
 Z88 IYj@8PmLzRf[8<cD:SiPnz3
@@ -215,6 +215,25 @@ Z105 !s90 -reportprogress|300|-work|work|D:/NLS_Intern/risc_v/memory.v|
 !i10b 1
 !s85 0
 !s101 -O0
+vmux_2in1
+!i10b 1
+!s100 WL<m76B[Ik=m>nn0]nn=[0
+ICcWP]LK8OGFaQ;lKL=7Vg1
+VJ6;LdKCeHaz?eNz^UM[V30
+R3
+w1776675477
+8D:\NLS_Intern\risc_v\mux_2in1.v
+FD:\NLS_Intern\risc_v\mux_2in1.v
+L0 1
+R7
+r1
+!s85 0
+31
+!s108 1776676911.996000
+!s107 D:\NLS_Intern\risc_v\mux_2in1.v|
+!s90 -reportprogress|300|-work|work|D:\NLS_Intern\risc_v\mux_2in1.v|
+!s101 -O0
+R8
 vopa_mux
 Z106 I>fY2b^6;>QbhfmCRPI?c>3
 Z107 VYA;<CKk>P1Q15b2H29PS`2
