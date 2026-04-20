@@ -21,7 +21,9 @@ module singlecycle(
   wire [4:0]  rs1_addr, rs2_addr, rd_addr;
 
   // ALU
-  wire [31:0] alu_operand_a, alu_operand_b, alu_data;
+  wire [1:0] ALUop;
+  wire [3:0] ALU_control;
+
 
   // Immediate
   wire [31:0] imm_value;
