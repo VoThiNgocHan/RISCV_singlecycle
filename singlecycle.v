@@ -21,7 +21,7 @@ module singlecycle(
   wire        opa_sel, opb_sel;
   wire [3:0]  alu_op;
   wire [1:0]  wb_sel;
-  wire        wr_en, rd_en;
+  wire        wr_en; //rd_en;
   wire        is_jalr;
 
   wire        br_less, br_equal;
@@ -82,7 +82,7 @@ module singlecycle(
       .o_pc_sel(pc_sel),
       .o_rd_wren(rd_wren),
       .o_mem_wren(wr_en),
-      .o_mem_rden(rd_en),
+      //.o_mem_rden(rd_en),
       .o_insn_vld(insn_vld),
       .o_br_un(br_un),
       .o_opa_sel(opa_sel),
@@ -103,7 +103,7 @@ module singlecycle(
 
   regfile reg_file (
       .i_clk(i_clk),
-      .i_reset(i_reset),
+      .i_rst(i_reset),
       .i_rs1_addr(rs1_addr),
       .i_rs2_addr(rs2_addr),
       .i_rd_addr(rd_addr),

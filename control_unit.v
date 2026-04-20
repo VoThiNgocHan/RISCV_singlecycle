@@ -1,181 +1,160 @@
 module control_unit (
-    input [31:0] instr,
-    input br_less,
-    input br_equal,
+    input [31:0] i_inst,
+    input i_br_less,
+    input i_br_equal,
 
-    output reg pc_sel,
-    output reg rd_wren,
-    output reg insn_vld,
-    output reg br_un,
-    output reg opa_sel, opb_sel,
-    output reg [3:0] alu_op, 
-    output reg mem_wren,
-    output reg [1:0] wb_sel,
-    output reg [2:0] ImmSrc
+    output reg o_pc_sel,
+    output reg o_rd_wren,
+    output reg o_insn_vld,
+    output reg o_br_un,
+    output reg o_opa_sel, o_opb_sel,
+    output reg [3:0] o_alu_op, 
+    output reg o_mem_wren,
+    output reg [1:0] o_wb_sel,
+    output reg [2:0] o_ImmSrc,
+    output reg o_is_jalr
 );
 
-
 wire [6:0] opcode;
-assign opcode = instr[6:0];
+assign opcode = i_inst[6:0];
 
 wire [2:0] funct3;
-assign funct3 = instr[14:12];
+assign funct3 = i_inst[14:12];
 
 wire [6:0] funct7;
-assign funct7 = instr[31:25];
+assign funct7 = i_inst[31:25];
 
 always @(*) begin
-    pc_sel = 1'b0;
-    rd_wren = 1'b0;
-    insn_vld = 1'b1;
-    br_un = 1'b0;
-    opa_sel = 1'b0;
-    opb_sel = 1'b0;
-    alu_op = 4'b0;
-    mem_wren = 1'b0;
-    wb_sel = 2'b01;
-    ImmSrc = 3'b000; // default
+    o_pc_sel = 1'b0;
+    o_rd_wren = 1'b0;
+    o_insn_vld = 1'b1;
+    o_br_un = 1'b0;
+    o_opa_sel = 1'b0;
+    o_opb_sel = 1'b0;
+    o_alu_op = 4'b0;
+    o_mem_wren = 1'b0;
+    o_wb_sel = 2'b01;
+    o_ImmSrc = 3'b000;
+    o_is_jalr = 1'b0;
 
     case (opcode)
 
         7'b0010011, 7'b0000011, 7'b1100111:
-            ImmSrc = 3'b000;
+            o_ImmSrc = 3'b000;
 
         7'b0100011:
-            ImmSrc = 3'b001;
+            o_ImmSrc = 3'b001;
 
         7'b1100011:
-            ImmSrc = 3'b010;
+            o_ImmSrc = 3'b010;
 
         7'b0110111, 7'b0010111:
-            ImmSrc = 3'b011;
+            o_ImmSrc = 3'b011;
 
         7'b1101111:
-            ImmSrc = 3'b100;
+            o_ImmSrc = 3'b100;
 
     endcase
 
     case (opcode)
-///////////////////////////////R-type///////////////////////////
+
+//////////////// R-type //////////////////
         7'b0110011: begin
-            rd_wren = 1'b1;
-            opa_sel = 1'b0;
-            opb_sel = 1'b0;
-            wb_sel = 2'b01;
+            o_rd_wren = 1'b1;
 
             case ({funct7, funct3})
-                10'b0000000_000: alu_op = 4'b0000; //add
-                10'b0100000_000: alu_op = 4'b0001; //sub
-                10'b0000000_001: alu_op = 4'b0010; //sll
-                10'b0000000_010: alu_op = 4'b0011; //slt
-                10'b0000000_011: alu_op = 4'b0100; //sltu
-                10'b0000000_100: alu_op = 4'b0101; //xor
-                10'b0000000_101: alu_op = 4'b0110; //srl
-                10'b0100000_101: alu_op = 4'b0111; //sra
-                10'b0000000_110: alu_op = 4'b1000; //or
-                10'b0000000_111: alu_op = 4'b1001; //and
-                default: alu_op = 4'b0000;
+                10'b0000000_000: o_alu_op = 4'b0000;
+                10'b0100000_000: o_alu_op = 4'b0001;
+                10'b0000000_001: o_alu_op = 4'b0010;
+                10'b0000000_010: o_alu_op = 4'b0011;
+                10'b0000000_011: o_alu_op = 4'b0100;
+                10'b0000000_100: o_alu_op = 4'b0101;
+                10'b0000000_101: o_alu_op = 4'b0110;
+                10'b0100000_101: o_alu_op = 4'b0111;
+                10'b0000000_110: o_alu_op = 4'b1000;
+                10'b0000000_111: o_alu_op = 4'b1001;
+                default: o_alu_op = 4'b0000;
             endcase
         end
-///////////////////////////////I-type//////////////////////////////
+
+//////////////// I-type //////////////////
         7'b0010011: begin
-            rd_wren = 1'b1;
-            opa_sel = 1'b0;
-            opb_sel = 1'b1;
-            wb_sel = 2'b01;
+            o_rd_wren = 1'b1;
+            o_opb_sel = 1'b1;
 
             case(funct3)
-                3'b000: alu_op = 4'b0000; //addi
-                3'b010: alu_op = 4'b0011; //slti
-                3'b011: alu_op = 4'b0100; //sltiu
-                3'b100: alu_op = 4'b0101; //xori
-                3'b110: alu_op = 4'b1000; //ori
-                3'b111: alu_op = 4'b1001; //andi
-                3'b001: begin
-                    if(funct7 == 7'b0000000)
-                        alu_op = 4'b0010; //slli
-                end
-                3'b101: begin
-                    if(funct7 == 7'b0000000)
-                        alu_op = 4'b0110; //srli
-                    else if(funct7 == 7'b0100000)
-                        alu_op = 4'b0111; //srai
-                end
-                default: alu_op = 4'b0000;
+                3'b000: o_alu_op = 4'b0000;
+                3'b010: o_alu_op = 4'b0011;
+                3'b011: o_alu_op = 4'b0100;
+                3'b100: o_alu_op = 4'b0101;
+                3'b110: o_alu_op = 4'b1000;
+                3'b111: o_alu_op = 4'b1001;
+                3'b001: o_alu_op = 4'b0010;
+                3'b101: o_alu_op = (funct7 == 7'b0100000) ? 4'b0111 : 4'b0110;
+                default: o_alu_op = 4'b0000;
             endcase
         end
-////////////////////////////////Load///////////////////////////////////
+
+//////////////// LOAD //////////////////
         7'b0000011: begin
-            rd_wren = 1'b1;
-            opa_sel = 1'b0;
-            opb_sel = 1'b1;
-            alu_op = 4'b0000;
-            wb_sel = 2'b10;
+            o_rd_wren = 1'b1;
+            o_opb_sel = 1'b1;
+            o_wb_sel = 2'b10;
         end
-//////////////////////////////store////////////////////////////////////
+
+//////////////// STORE //////////////////
         7'b0100011: begin
-            mem_wren = 1'b1;
-            opa_sel = 1'b0;
-            opb_sel = 1'b1;
-            alu_op = 4'b0000;
+            o_mem_wren = 1'b1;
+            o_opb_sel = 1'b1;
         end
-////////////////////////////branch////////////////////////////////////
+
+//////////////// BRANCH //////////////////
         7'b1100011: begin
-            opa_sel = 1'b0;
-            opb_sel = 1'b0;
             case(funct3)
-                3'b000: pc_sel = br_equal; //beq
-                3'b001: pc_sel = ~br_equal; //bne
-                3'b100: begin
-                    pc_sel = br_less; //blt
-                    br_un = 1'b0;
-                end
-                3'b101: begin
-                    pc_sel = ~br_less; //bge
-                    br_un = 1'b0;
-                end
-                3'b110: begin 
-                    pc_sel = br_less; //bltu
-                    br_un = 1'b1;
-                end
-                3'b111: begin 
-                    pc_sel = ~br_less; //bgeu
-                    br_un = 1'b1;
-                end
+                3'b000: o_pc_sel = i_br_equal;
+                3'b001: o_pc_sel = ~i_br_equal;
+                3'b100: o_pc_sel = i_br_less;
+                3'b101: o_pc_sel = ~i_br_less;
+                3'b110: begin o_pc_sel = i_br_less; o_br_un = 1'b1; end
+                3'b111: begin o_pc_sel = ~i_br_less; o_br_un = 1'b1; end
             endcase
         end
-////////////////////////////////jal///////////////////////////////////////////
+
+//////////////// JAL //////////////////
         7'b1101111: begin
-            rd_wren = 1'b1;
-            pc_sel = 1'b1;
-            opa_sel = 1'b1;
-            opb_sel = 1'b1;
-            wb_sel = 2'b00;
+            o_rd_wren = 1'b1;
+            o_pc_sel = 1'b1;
+            o_opa_sel = 1'b1;
+            o_opb_sel = 1'b1;
+            o_wb_sel = 2'b00;
         end
-///////////////////////////////jalr/////////////////////////////////////////
+
+//////////////// JALR //////////////////
         7'b1100111: begin
-            rd_wren = 1'b1;
-            opa_sel = 1'b0;
-            opb_sel = 1'b1;
-            wb_sel = 2'b00;
-            pc_sel = 1'b1;
+            o_rd_wren = 1'b1;
+            o_pc_sel = 1'b1;
+            o_opb_sel = 1'b1;
+            o_wb_sel = 2'b00;
+            o_is_jalr = 1'b1;
         end
-///////////////////////////////lui/////////////////////////////////////////
+
+//////////////// LUI //////////////////
         7'b0110111: begin
-            rd_wren = 1'b1;
-            opa_sel = 1'b0;
-            opb_sel = 1'b1;
-            wb_sel = 2'b01;
+            o_rd_wren = 1'b1;
+            o_opb_sel = 1'b1;
         end
-//////////////////////////////auipc/////////////////////////////////////
+
+//////////////// AUIPC //////////////////
         7'b0010111: begin
-            rd_wren = 1'b1;
-            opa_sel = 1'b1;
-            opb_sel = 1'b1;
-            wb_sel = 2'b01;
+            o_rd_wren = 1'b1;
+            o_opa_sel = 1'b1;
+            o_opb_sel = 1'b1;
         end
-////////////////////////////////default///////////////////////////////
-        default: insn_vld = 1'b0;
+
+//////////////// DEFAULT //////////////////
+        default: o_insn_vld = 1'b0;
+
     endcase
 end
+
 endmodule
