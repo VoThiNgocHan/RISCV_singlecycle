@@ -61,7 +61,7 @@ always @(*) begin
 //////////////// R-type //////////////////
         7'b0110011: begin
             o_rd_wren = 1'b1;
-
+            o_wb_sel = 2'b00;
             case ({funct7, funct3})
                 10'b0000000_000: o_alu_op = 4'b0000;
                 10'b0100000_000: o_alu_op = 4'b0001;
@@ -81,7 +81,7 @@ always @(*) begin
         7'b0010011: begin
             o_rd_wren = 1'b1;
             o_opb_sel = 1'b1;
-
+             o_wb_sel = 2'b00;
             case(funct3)
                 3'b000: o_alu_op = 4'b0000;
                 3'b010: o_alu_op = 4'b0011;

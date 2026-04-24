@@ -4,13 +4,15 @@ module singlecycle(
     output       o_insn_vld,
     output [31:0] o_pc_debug, o_io_ledr, o_io_ledg, o_io_lcd,
     output [6:0]  o_io_hex0, o_io_hex1, o_io_hex2, o_io_hex3,
-                  o_io_hex4, o_io_hex5, o_io_hex6, o_io_hex7
+                  o_io_hex4, o_io_hex5, o_io_hex6, o_io_hex7,
+    output wire [31:0] instr,
+    output wire [3:0]  alu_op
 );
 
   // ==================== Signals ====================
 
   wire [31:0] pc, pc_next, pc_plus4;
-  wire [31:0] instr;
+  //wire [31:0] instr;
 
   wire [31:0] rs1_data, rs2_data, wb_data;
   wire [4:0]  rs1_addr, rs2_addr, rd_addr;
@@ -19,7 +21,7 @@ module singlecycle(
 
   wire        pc_sel, rd_wren, insn_vld, br_un;
   wire        opa_sel, opb_sel;
-  wire [3:0]  alu_op;
+  //wire [3:0]  alu_op;
   wire [1:0]  wb_sel;
   wire        wr_en; //rd_en;
   wire        is_jalr;

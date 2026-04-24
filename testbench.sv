@@ -17,15 +17,16 @@ module testbench;
   logic [6:0]  o_io_hex0, o_io_hex1, o_io_hex2, o_io_hex3;
   logic [6:0]  o_io_hex4, o_io_hex5, o_io_hex6, o_io_hex7;
   logic [31:0] o_io_lcd;
+  logic [31:0] instr;
 
   // Clock generation: 10ns period (100MHz)
   always #5 i_clk = ~i_clk;
 
   // Reset logic
   initial begin
-    i_reset = 1;
-    #20;
     i_reset = 0;
+    #20;
+    i_reset = 1;
   end
 
   // DUT instantiation
@@ -45,7 +46,8 @@ module testbench;
     .o_io_hex5(o_io_hex5),
     .o_io_hex6(o_io_hex6),
     .o_io_hex7(o_io_hex7),
-    .o_io_lcd(o_io_lcd)
+    .o_io_lcd(o_io_lcd),
+    .instr(instr)
   );
 
   // Optional: Display useful debug information every cycle
@@ -66,7 +68,7 @@ module testbench;
 
   // Timeout
   initial begin
-    #100000; // 100us sim time
+    #10000; // 100us sim time
     $display("Timeout: Testbench finished.");
     $finish;
   end

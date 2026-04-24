@@ -17,6 +17,8 @@ entity singlecycle is
         o_io_hex4       : out    vl_logic_vector(6 downto 0);
         o_io_hex5       : out    vl_logic_vector(6 downto 0);
         o_io_hex6       : out    vl_logic_vector(6 downto 0);
-        o_io_hex7       : out    vl_logic_vector(6 downto 0)
+        o_io_hex7       : out    vl_logic_vector(6 downto 0);
+        instr           : out    vl_logic_vector(31 downto 0);
+        alu_op          : out    vl_logic_vector(3 downto 0)
     );
 end singlecycle;
