@@ -40,7 +40,7 @@ module singlecycle(
 
   pc_hold pc_hold_unit (
       .i_clk(i_clk),
-      .i_rst_n(i_reset),
+      .i_rst(i_reset),
       .i_pc_next(pc_next),
       .o_pc(pc)
   );
@@ -205,7 +205,7 @@ module singlecycle(
   reg [31:0] pc_debug_reg;
 
   always @(posedge i_clk) begin
-      if (~i_reset)
+      if (i_reset)
           pc_debug_reg <= 32'h0;
       else
           pc_debug_reg <= pc;

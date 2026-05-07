@@ -43,8 +43,8 @@ wire reg_buffer_sel;
 assign reg_buffer_sel = (i_out_buf_addr[31:16] == 16'h1000);
 
 // WRITE
-always @(posedge i_clk or negedge i_reset) begin
-    if (!i_reset) begin
+always @(posedge i_clk or posedge i_reset) begin
+    if (i_reset) begin
         out_buffer_reg[red_leds]     <= 8'h0;
         out_buffer_reg[red_leds + 1] <= 8'h0;
         out_buffer_reg[red_leds + 2] <= 8'h0;

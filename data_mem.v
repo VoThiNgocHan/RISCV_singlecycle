@@ -73,8 +73,8 @@ module data_mem (
   // ===== WRITE =====
   integer i;
 
-  always @(posedge i_clk or negedge i_reset) begin
-    if (!i_reset) begin
+  always @(posedge i_clk or posedge i_reset) begin
+    if (i_reset) begin
       for (i = 0; i < 2048; i = i + 1) begin
         memory[i] <= 8'h00;
       end
