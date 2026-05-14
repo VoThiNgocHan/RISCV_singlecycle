@@ -7,9 +7,10 @@ xpack-riscv-none-elf-gcc-*/
 # Dump files
 *.dump
 mem.dump
-
+mti
+mpf
 # Temporary files
 _temp/
 
 # Random files
-world
+han
