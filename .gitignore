@@ -1,4 +1,15 @@
+# ModelSim / Questa
+work/
+transcript
+vsim.wlf
 *.wlf
-*.mti
-*.mpf
-00_src/
+xpack-riscv-none-elf-gcc-*/
+# Dump files
+*.dump
+mem.dump
+
+# Temporary files
+_temp/
+
+# Random files
+world

@@ -1,0 +1,148 @@
+D:/NLS_Intern/risc_v/hex_slave.v {1 {vlog -work work {D:\NLS_Intern\risc_v\hex_slave.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module hex_slave
+
+Top level modules:
+	hex_slave
+
+} {} {}} D:/NLS_Intern/risc_v/led_slave.v {1 {vlog -work work {D:\NLS_Intern\risc_v\led_slave.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module led_slave
+
+Top level modules:
+	led_slave
+
+} {} {}} D:/NLS_Intern/risc_v/control_unit.v {1 {vlog -work work {D:\NLS_Intern\risc_v\control_unit.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module control_unit
+
+Top level modules:
+	control_unit
+
+} {} {}} D:/NLS_Intern/risc_v/tb_lsu.v {1 {vlog -work work {D:\NLS_Intern\risc_v\tb_lsu.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module tb_lsu
+
+Top level modules:
+	tb_lsu
+
+} {} {}} D:/NLS_Intern/risc_v/pc_hold.v {1 {vlog -work work {D:\NLS_Intern\risc_v\pc_hold.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module pc_hold
+
+Top level modules:
+	pc_hold
+
+} {} {}} D:/NLS_Intern/risc_v/singlecycle.v {1 {vlog -work work {D:\NLS_Intern\risc_v\singlecycle.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module singlecycle
+
+Top level modules:
+	singlecycle
+
+} {} {}} D:/NLS_Intern/risc_v/alu.v {1 {vlog -work work {D:\NLS_Intern\risc_v\alu.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module alu
+
+Top level modules:
+	alu
+
+} {} {}} D:/NLS_Intern/risc_v/mux_2in1.v {1 {vlog -work work {D:\NLS_Intern\risc_v\mux_2in1.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module mux_2in1
+
+Top level modules:
+	mux_2in1
+
+} {} {}} D:/NLS_Intern/risc_v/avalon_interconnect.v {1 {vlog -work work {D:\NLS_Intern\risc_v\avalon_interconnect.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module avalon_interconnect
+
+Top level modules:
+	avalon_interconnect
+
+} {} {}} D:/NLS_Intern/risc_v/pc_4.v {1 {vlog -work work {D:\NLS_Intern\risc_v\pc_4.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module pc_4
+
+Top level modules:
+	pc_4
+
+} {} {}} D:/NLS_Intern/risc_v/regfile.v {1 {vlog -work work {D:\NLS_Intern\risc_v\regfile.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module regfile
+
+Top level modules:
+	regfile
+
+} {} {}} D:/NLS_Intern/risc_v/brc.v {1 {vlog -work work {D:\NLS_Intern\risc_v\brc.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module brc
+
+Top level modules:
+	brc
+
+} {} {}} D:/NLS_Intern/risc_v/ALU_Decoder.v {1 {vlog -work work D:/NLS_Intern/risc_v/ALU_Decoder.v
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module ALU_decoder
+
+Top level modules:
+	ALU_decoder
+
+} {} {}} D:/NLS_Intern/risc_v/Extend.v {1 {vlog -work work {D:\NLS_Intern\risc_v\Extend.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module Extend
+
+Top level modules:
+	Extend
+
+} {} {}} D:/NLS_Intern/risc_v/ALU_control.v {1 {vlog -work work {D:\NLS_Intern\risc_v\ALU_control.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module ALU_control
+
+Top level modules:
+	ALU_control
+
+} {} {}} D:/NLS_Intern/risc_v/top.v {1 {vlog -work work {D:\NLS_Intern\risc_v\top.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module top
+
+Top level modules:
+	top
+
+} {} {}} D:/NLS_Intern/risc_v/lsu.v {1 {vlog -work work {D:\NLS_Intern\risc_v\lsu.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module lsu
+
+Top level modules:
+	lsu
+
+} {} {}} D:/NLS_Intern/risc_v/sram_slave.v {1 {vlog -work work {D:\NLS_Intern\risc_v\sram_slave.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module sram_slave
+
+Top level modules:
+	sram_slave
+
+} {} {}} D:/NLS_Intern/risc_v/tb_control_unit.v {1 {vlog -work work D:/NLS_Intern/risc_v/tb_control_unit.v
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module tb_control_unit
+
+Top level modules:
+	tb_control_unit
+
+} {} {}} D:/NLS_Intern/risc_v/lcd_slave.v {1 {vlog -work work {D:\NLS_Intern\risc_v\lcd_slave.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module lcd_slave
+
+Top level modules:
+	lcd_slave
+
+} {} {}} D:/NLS_Intern/risc_v/instr_mem.v {1 {vlog -work work {D:\NLS_Intern\risc_v\instr_mem.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module instr_mem
+
+Top level modules:
+	instr_mem
+
+} {} {}}

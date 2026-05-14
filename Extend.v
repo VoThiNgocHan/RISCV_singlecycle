@@ -1,5 +1,5 @@
 module Extend(
-    input [31:7] instruction, 
+    input [31:0] instruction, 
     input [2:0]  ImmSrc,
     output reg [31:0] ImmExt
 );

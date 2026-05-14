@@ -3,247 +3,271 @@
 module tb_singlecycle;
 
 ////////////////////////////////////////////////////////////
-// CLOCK / RESET
+// INPUTS
 ////////////////////////////////////////////////////////////
 
-reg clk;
-reg reset;
+reg         i_clk;
+reg         i_reset;
 
-initial begin
-    clk = 0;
-    forever #5 clk = ~clk;
-end
+reg [31:0]  i_ld_data;
 
-initial begin
-    reset = 1;
-    #20;
-    reset = 0;
-end
+////////////////////////////////////////////////////////////
+// OUTPUTS
+////////////////////////////////////////////////////////////
+
+wire        o_insn_vld;
+
+wire [31:0] o_pc_debug;
+
+wire [31:0] instr;
+
+wire [3:0]  alu_op;
+
+wire [31:0] o_lsu_addr;
+wire [31:0] o_st_data;
+
+wire        o_lsu_wren;
+wire        o_lsu_rden;
+
+wire [2:0]  o_lsu_control;
 
 ////////////////////////////////////////////////////////////
 // DUT
 ////////////////////////////////////////////////////////////
 
-wire        insn_vld;
-wire [31:0] pc;
-wire [31:0] instr;
-wire [3:0]  alu_op;
+singlecycle dut(
 
-wire [31:0] ledr;
-wire [31:0] ledg;
-wire [31:0] lcd;
+    .i_clk(i_clk),
+    .i_reset(i_reset),
 
-wire [6:0] hex0, hex1, hex2, hex3;
-wire [6:0] hex4, hex5, hex6, hex7;
+    .i_ld_data(i_ld_data),
 
-singlecycle dut (
-    .i_clk(clk),
-    .i_reset(reset),
-    .i_io_sw(32'b0),
+    .o_insn_vld(o_insn_vld),
 
-    .o_insn_vld(insn_vld),
-    .o_pc_debug(pc),
-
-    .o_io_ledr(ledr),
-    .o_io_ledg(ledg),
-    .o_io_lcd(lcd),
-
-    .o_io_hex0(hex0),
-    .o_io_hex1(hex1),
-    .o_io_hex2(hex2),
-    .o_io_hex3(hex3),
-    .o_io_hex4(hex4),
-    .o_io_hex5(hex5),
-    .o_io_hex6(hex6),
-    .o_io_hex7(hex7),
+    .o_pc_debug(o_pc_debug),
 
     .instr(instr),
-    .alu_op(alu_op)
+
+    .alu_op(alu_op),
+
+    .o_lsu_addr(o_lsu_addr),
+    .o_st_data(o_st_data),
+
+    .o_lsu_wren(o_lsu_wren),
+    .o_lsu_rden(o_lsu_rden),
+
+    .o_lsu_control(o_lsu_control)
 );
 
 ////////////////////////////////////////////////////////////
-// RV32I DECODER
+// CLOCK
 ////////////////////////////////////////////////////////////
 
-wire [6:0] opcode;
-wire [2:0] funct3;
-wire [6:0] funct7;
-
-assign opcode = instr[6:0];
-assign funct3 = instr[14:12];
-assign funct7 = instr[31:25];
+always #5 i_clk = ~i_clk;
 
 ////////////////////////////////////////////////////////////
-// HELLO MONITOR
+// MONITOR
 ////////////////////////////////////////////////////////////
 
-reg [3:0] hello_state;
+always @(posedge i_clk) begin
 
-initial begin
-    hello_state = 0;
+    $display("====================================================");
+
+    $display("TIME          = %0t", $time);
+
+    $display("PC            = %h", o_pc_debug);
+
+    $display("INSTRUCTION   = %h", instr);
+
+    $display("ALU_OP        = %b", alu_op);
+
+    $display("LSU_ADDR      = %h", o_lsu_addr);
+
+    $display("STORE_DATA    = %h", o_st_data);
+
+    $display("LSU_WREN      = %b", o_lsu_wren);
+
+    $display("LSU_RDEN      = %b", o_lsu_rden);
+
+    $display("LSU_CONTROL   = %b", o_lsu_control);
+
+    $display("LD_DATA       = %h", i_ld_data);
+
+    $display("INSN_VALID    = %b", o_insn_vld);
+
+    $display("====================================================\n");
+
 end
 
-always @(posedge clk) begin
+////////////////////////////////////////////////////////////
+// ALU CHANGE MONITOR
+////////////////////////////////////////////////////////////
 
-    if(!reset) begin
+always @(dut.alu_data) begin
 
-        case(pc)
+    $display("--------------------------------------------");
 
-            32'h00000000:
-                if(hello_state == 0) begin
-                    $write("H");
-                    hello_state <= 1;
-                end
+    $display("ALU_DATA CHANGED");
 
-            32'h00000004:
-                if(hello_state == 1) begin
-                    $write("E");
-                    hello_state <= 2;
-                end
+    $display("TIME      = %0t", $time);
 
-            32'h00000008:
-                if(hello_state == 2) begin
-                    $write("L");
-                    hello_state <= 3;
-                end
+    $display("PC        = %h", o_pc_debug);
 
-            32'h0000000C:
-                if(hello_state == 3) begin
-                    $write("L");
-                    hello_state <= 4;
-                end
+    $display("INSTR     = %h", instr);
 
-            32'h00000010:
-                if(hello_state == 4) begin
-                    $write("O\n");
-                    hello_state <= 5;
-                end
+    $display("ALU_DATA  = %h", dut.alu_data);
 
-        endcase
+    $display("--------------------------------------------\n");
+
+end
+
+////////////////////////////////////////////////////////////
+// WRITEBACK MONITOR
+////////////////////////////////////////////////////////////
+
+always @(posedge i_clk) begin
+    if(dut.rd_wren) begin
+        $display("********************************************");
+
+        $display("WRITEBACK UPDATED");
+
+        $display("TIME      = %0t", $time);
+
+        $display("PC        = %h", o_pc_debug);
+
+        $display("WB_DATA   = %h", dut.wb_data);
+
+        $display("RD_ADDR   = %d", dut.rd_addr);
+
+        $display("********************************************\n");
     end
 end
 
 ////////////////////////////////////////////////////////////
-// EXECUTION TRACE
+// LOAD / STORE MONITOR
 ////////////////////////////////////////////////////////////
+always @(posedge i_clk) begin
 
-always @(posedge clk) begin
+    if(o_lsu_wren) begin
 
-    if (!reset && insn_vld) begin
+        $display("######## STORE DETECTED ########");
 
-        $display("\n====================================");
+        $display("TIME          = %0t", $time);
 
-        $display("TIME    : %0t ns", $time);
-        $display("PC      : %08h", pc);
-        $display("INSTR   : %08h", instr);
-        $display("ALU_OP  : %b", alu_op);
+        $display("STORE_ADDR    = %h", o_lsu_addr);
 
-        ////////////////////////////////////////////////////
-        // Instruction Decode
-        ////////////////////////////////////////////////////
+        $display("STORE_DATA    = %h", o_st_data);
 
-        case(opcode)
+        $display("FUNCT3        = %b", o_lsu_control);
 
-            7'b0110011: begin
+        if(o_lsu_addr[31:16] == 16'h1000) begin
 
-                case({funct7, funct3})
+            $display("LCD WRITE : %c", o_st_data[7:0]);
 
-                    10'b0000000_000:
-                        $display("EXECUTE : ADD");
+        end
 
-                    10'b0100000_000:
-                        $display("EXECUTE : SUB");
-
-                    10'b0000000_111:
-                        $display("EXECUTE : AND");
-
-                    10'b0000000_110:
-                        $display("EXECUTE : OR");
-
-                    default:
-                        $display("EXECUTE : UNKNOWN R");
-
-                endcase
-            end
-
-            7'b0010011: begin
-
-                case(funct3)
-
-                    3'b000:
-                        $display("EXECUTE : ADDI");
-
-                    default:
-                        $display("EXECUTE : UNKNOWN I");
-
-                endcase
-            end
-
-            7'b0000011:
-                $display("EXECUTE : LOAD");
-
-            7'b0100011:
-                $display("EXECUTE : STORE");
-
-            7'b1100011:
-                $display("EXECUTE : BRANCH");
-
-            7'b0110111:
-                $display("EXECUTE : LUI");
-
-            7'b1101111:
-                $display("EXECUTE : JAL");
-
-            default:
-                $display("EXECUTE : UNKNOWN");
-
-        endcase
-
-        ////////////////////////////////////////////////////
-        // REGISTER CHECK
-        ////////////////////////////////////////////////////
-
-        $display("x1  = %08h", dut.reg_file.regs[1]);
-        $display("x2  = %08h", dut.reg_file.regs[2]);
-        $display("x3  = %08h", dut.reg_file.regs[3]);
-        $display("x4  = %08h", dut.reg_file.regs[4]);
-        $display("x5  = %08h", dut.reg_file.regs[5]);
-        $display("x6  = %08h", dut.reg_file.regs[6]);
-        $display("x7  = %08h", dut.reg_file.regs[7]);
-        $display("x10 = %08h", dut.reg_file.regs[10]);
-
-        ////////////////////////////////////////////////////
-        // OUTPUT DEVICES
-        ////////////////////////////////////////////////////
-
-        $display("LEDR = %08h", ledr);
-        $display("LEDG = %08h", ledg);
-
-        $display("LCD  = %c%c%c%c",
-            lcd[31:24],
-            lcd[23:16],
-            lcd[15:8],
-            lcd[7:0]);
-
-        $display("STORE ADDR = %08h", dut.alu_data);
-        $display("STORE DATA = %08h", dut.rs2_data);        
+        $display("################################\n");
 
     end
+
+    if(o_lsu_rden) begin
+
+        $display("######## LOAD DETECTED #########");
+
+        $display("TIME          = %0t", $time);
+
+        $display("LOAD_ADDR     = %h", o_lsu_addr);
+
+        $display("LOAD_DATA     = %h", i_ld_data);
+
+        $display("FUNCT3        = %b", o_lsu_control);
+
+        $display("################################\n");
+
+    end
+
 end
 
 ////////////////////////////////////////////////////////////
-// TIMEOUT
+// BRANCH MONITOR
+////////////////////////////////////////////////////////////
+
+always @(posedge i_clk) begin
+
+    if(dut.pc_sel) begin
+
+        $display("$$$$$$$$ BRANCH / JUMP $$$$$$$$$");
+
+        $display("TIME          = %0t", $time);
+
+        $display("PC_OLD        = %h", dut.pc);
+
+        $display("PC_NEW        = %h", dut.pc_next);
+
+        $display("TARGET        = %h", dut.pc_target);
+
+        $display("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n");
+
+    end
+
+end
+
+////////////////////////////////////////////////////////////
+// TEST SEQUENCE
 ////////////////////////////////////////////////////////////
 
 initial begin
 
-    #2500;
+    ////////////////////////////////////////////////////////
+    // INIT
+    ////////////////////////////////////////////////////////
 
-    $display("\n####################################");
-    $display("############# TIMEOUT ##############");
-    $display("####################################");
+    i_clk      = 0;
+
+    i_reset    = 1;
+
+    i_ld_data  = 32'h0;
+
+    ////////////////////////////////////////////////////////
+    // RESET
+    ////////////////////////////////////////////////////////
+
+    #20;
+
+    i_reset = 0;
+
+    ////////////////////////////////////////////////////////
+    // LOAD DATA TEST
+    ////////////////////////////////////////////////////////
+
+    #30;
+
+    i_ld_data = 32'h12345678;
+
+    #20;
+
+    i_ld_data = 32'hDEADBEEF;
+
+    #20;
+
+    i_ld_data = 32'hCAFEBABE;
+
+    ////////////////////////////////////////////////////////
+    // RUN CPU
+    ////////////////////////////////////////////////////////
+
+    #300;
+
+    ////////////////////////////////////////////////////////
+    // FINISH
+    ////////////////////////////////////////////////////////
+
+    $display("\n====================================");
+    $display("SIMULATION FINISHED");
+    $display("====================================\n");
 
     $finish;
+
 end
 
 endmodule

@@ -126,7 +126,7 @@ always @(*) begin
             o_pc_sel = 1'b1;
             o_opa_sel = 1'b1;
             o_opb_sel = 1'b1;
-            o_wb_sel = 2'b00;
+            o_wb_sel = 2'b10;
         end
 
 //////////////// JALR //////////////////
@@ -134,14 +134,17 @@ always @(*) begin
             o_rd_wren = 1'b1;
             o_pc_sel = 1'b1;
             o_opb_sel = 1'b1;
-            o_wb_sel = 2'b00;
+            o_wb_sel = 2'b10;
             o_is_jalr = 1'b1;
         end
 
 //////////////// LUI //////////////////
         7'b0110111: begin
             o_rd_wren = 1'b1;
+            o_opa_sel = 1'b0;
             o_opb_sel = 1'b1;
+            o_wb_sel  = 2'b00;
+            o_alu_op  = 4'b0000;
         end
 
 //////////////// AUIPC //////////////////
@@ -149,6 +152,7 @@ always @(*) begin
             o_rd_wren = 1'b1;
             o_opa_sel = 1'b1;
             o_opb_sel = 1'b1;
+            o_wb_sel = 2'b00;
         end
 
 //////////////// DEFAULT //////////////////
