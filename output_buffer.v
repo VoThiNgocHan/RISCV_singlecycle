@@ -37,41 +37,35 @@ localparam red_leds    = 16'h0000,
            end_addr    = 16'h4FFF;
 
 // bộ nhớ buffer
-reg [7:0] out_buffer_reg [0:16383];
+reg [7:0] out_buffer_reg [0:20479];
 
 wire reg_buffer_sel;
 assign reg_buffer_sel = (i_out_buf_addr[31:16] == 16'h1000);
 
 // WRITE
+integer i;
+
 always @(posedge i_clk or posedge i_reset) begin
-    if (i_reset) begin
-        out_buffer_reg[red_leds]     <= 8'h0;
-        out_buffer_reg[red_leds + 1] <= 8'h0;
-        out_buffer_reg[red_leds + 2] <= 8'h0;
-        out_buffer_reg[red_leds + 3] <= 8'h0;
-        out_buffer_reg[green_leds]   <= 8'h0;
-        out_buffer_reg[hex_0]        <= 8'h0;
-        out_buffer_reg[hex_1]        <= 8'h0;
-        out_buffer_reg[hex_2]        <= 8'h0;
-        out_buffer_reg[hex_3]        <= 8'h0;
-        out_buffer_reg[hex_4]        <= 8'h0;
-        out_buffer_reg[hex_5]        <= 8'h0;
-        out_buffer_reg[hex_6]        <= 8'h0;
-        out_buffer_reg[hex_7]        <= 8'h0;
-        out_buffer_reg[lcd]          <= 8'h0;
-        out_buffer_reg[lcd + 1]      <= 8'h0;
-        out_buffer_reg[lcd + 2]      <= 8'h0;
-        out_buffer_reg[lcd + 3]      <= 8'h0;
+    if(i_reset) begin
+        for(i=0; i<20480; i=i+1)
+            out_buffer_reg[i] <= 8'h00;
     end
     else if (reg_buffer_sel && i_wren && i_out_buf_addr[15:0] <= end_addr) begin
         if (i_bmask[0])
-            out_buffer_reg[i_out_buf_addr[15:0]]     <= i_out_buf_data[7:0];
+            out_buffer_reg[{i_out_buf_addr[15:2], 2'b00}]
+                <= i_out_buf_data[7:0];
+
         if (i_bmask[1])
-            out_buffer_reg[i_out_buf_addr[15:0] + 1] <= i_out_buf_data[15:8];
+            out_buffer_reg[{i_out_buf_addr[15:2], 2'b00} + 1]
+                <= i_out_buf_data[15:8];
+
         if (i_bmask[2])
-            out_buffer_reg[i_out_buf_addr[15:0] + 2] <= i_out_buf_data[23:16];
+            out_buffer_reg[{i_out_buf_addr[15:2], 2'b00} + 2]
+                <= i_out_buf_data[23:16];
+
         if (i_bmask[3])
-            out_buffer_reg[i_out_buf_addr[15:0] + 3] <= i_out_buf_data[31:24];
+            out_buffer_reg[{i_out_buf_addr[15:2], 2'b00} + 3]
+                <= i_out_buf_data[31:24];
     end
 end
 
@@ -79,11 +73,10 @@ end
 reg [7:0] b0, b1, b2, b3;
 
 always @(*) begin
-    b0 = out_buffer_reg[i_out_buf_addr[15:0]];
-    b1 = out_buffer_reg[i_out_buf_addr[15:0] + 1];
-    b2 = out_buffer_reg[i_out_buf_addr[15:0] + 2];
-    b3 = out_buffer_reg[i_out_buf_addr[15:0] + 3];
-
+    b0 = out_buffer_reg[{i_out_buf_addr[15:2], 2'b00}];
+    b1 = out_buffer_reg[{i_out_buf_addr[15:2], 2'b00} + 1];
+    b2 = out_buffer_reg[{i_out_buf_addr[15:2], 2'b00} + 2];
+    b3 = out_buffer_reg[{i_out_buf_addr[15:2], 2'b00} + 3];
     case(i_control)
         LB:  o_out_buf_data = {{24{b0[7]}}, b0};
         LH:  o_out_buf_data = {{16{b1[7]}}, b1, b0};

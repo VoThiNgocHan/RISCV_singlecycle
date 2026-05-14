@@ -155,7 +155,7 @@ module singlecycle(
       .i_alu_op(alu_op),
       .o_alu_data(alu_data)
   );
-
+//cu moi lan alu_dât thay doi thi display gia tri alu_data tai tohoi idem do
   // ==================== LSU ====================
 
   assign lsu_control = instr[14:12];
