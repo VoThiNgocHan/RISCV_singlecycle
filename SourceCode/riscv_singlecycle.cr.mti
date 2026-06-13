@@ -1,0 +1,106 @@
+D:/NLS_Intern/risc_v/SourceCode/immgen.v {1 {vlog -work work {D:\NLS_Intern\risc_v\SourceCode\immgen.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module immgen
+
+Top level modules:
+	immgen
+
+} {} {}} D:/NLS_Intern/risc_v/SourceCode/adder_8bit.v {1 {vlog -work work {D:\NLS_Intern\risc_v\SourceCode\adder_8bit.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module adder_8bit
+
+Top level modules:
+	adder_8bit
+
+} {} {}} D:/NLS_Intern/risc_v/SourceCode/decoder5_32.v {1 {vlog -work work {D:\NLS_Intern\risc_v\SourceCode\decoder5_32.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module decoder5_32
+
+Top level modules:
+	decoder5_32
+
+} {} {}} D:/NLS_Intern/risc_v/SourceCode/brc.v {1 {vlog -work work {D:\NLS_Intern\risc_v\SourceCode\brc.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module brc
+
+Top level modules:
+	brc
+
+} {} {}} D:/NLS_Intern/risc_v/SourceCode/control_unit.v {1 {vlog -work work {D:\NLS_Intern\risc_v\SourceCode\control_unit.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module control_unit
+
+Top level modules:
+	control_unit
+
+} {} {}} D:/NLS_Intern/risc_v/SourceCode/comp1.v {1 {vlog -work work {D:\NLS_Intern\risc_v\SourceCode\comp1.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module comp1
+
+Top level modules:
+	comp1
+
+} {} {}} D:/NLS_Intern/risc_v/SourceCode/comp2.v {1 {vlog -work work {D:\NLS_Intern\risc_v\SourceCode\comp2.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module comp2
+
+Top level modules:
+	comp2
+
+} {} {}} D:/NLS_Intern/risc_v/SourceCode/comp4.v {1 {vlog -work work {D:\NLS_Intern\risc_v\SourceCode\comp4.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module comp4
+
+Top level modules:
+	comp4
+
+} {} {}} D:/NLS_Intern/risc_v/SourceCode/adder_32bit.v {1 {vlog -work work {D:\NLS_Intern\risc_v\SourceCode\adder_32bit.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module adder_32bit
+
+Top level modules:
+	adder_32bit
+
+} {} {}} D:/NLS_Intern/risc_v/SourceCode/comp32.v {1 {vlog -work work {D:\NLS_Intern\risc_v\SourceCode\comp32.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module comp32
+
+Top level modules:
+	comp32
+
+} {} {}} D:/NLS_Intern/risc_v/SourceCode/comp16.v {1 {vlog -work work {D:\NLS_Intern\risc_v\SourceCode\comp16.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module comp16
+
+Top level modules:
+	comp16
+
+} {} {}} D:/NLS_Intern/risc_v/SourceCode/comp8.v {1 {vlog -work work {D:\NLS_Intern\risc_v\SourceCode\comp8.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module comp8
+
+Top level modules:
+	comp8
+
+} {} {}} D:/NLS_Intern/risc_v/SourceCode/full_adder.v {1 {vlog -work work {D:\NLS_Intern\risc_v\SourceCode\full_adder.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module full_adder
+
+Top level modules:
+	full_adder
+
+} {} {}} D:/NLS_Intern/risc_v/SourceCode/alu.v {1 {vlog -work work {D:\NLS_Intern\risc_v\SourceCode\alu.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module alu
+
+Top level modules:
+	alu
+
+} {} {}} D:/NLS_Intern/risc_v/SourceCode/adder_4bit.v {1 {vlog -work work {D:\NLS_Intern\risc_v\SourceCode\adder_4bit.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module adder_4bit
+
+Top level modules:
+	adder_4bit
+
+} {} {}}
