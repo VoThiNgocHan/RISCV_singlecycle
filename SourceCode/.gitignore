@@ -15,6 +15,7 @@
 *.msp
 *.mpf
 *.mti 
-*.work
+work/
+
 
 *.sln.iml
