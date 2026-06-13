@@ -14,7 +14,7 @@ module memory
     reg [7:0] mem2 [0:511];
     reg [7:0] mem3 [0:511];
 
-    reg [8:0] i;
+    integer i;
 
     assign o_rdata = {mem3[i_addr], mem2[i_addr], mem1[i_addr], mem0[i_addr]};
 
