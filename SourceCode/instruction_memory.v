@@ -8,6 +8,8 @@ module instruction_memory(
    assign o_instr = mem[i_addr];
    initial begin
 	 $readmemh("D:/NLS_Intern/risc_v/Testbench/mem.dump",mem);
+   //$readmemh("D:/NLS_Intern/risc_v/Testbench/mem_mmio.dump", mem);
+   //$readmemh("D:/NLS_Intern/risc_v/Testbench/hello_mem.dump",mem);
    end
 //D:\NLS_Intern\risc_v\Testbench
 endmodule 
